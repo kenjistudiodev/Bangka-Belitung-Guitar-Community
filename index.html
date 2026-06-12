@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BBGC – Bangka Belitung Guitar Community</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0A0E1A;
+      --bg2:      #111827;
+      --bg3:      #1C2539;
+      --gold:     #D4A017;
+      --gold-lt:  #F0C040;
+      --red:      #C0392B;
+      --white:    #F0EDE6;
+      --muted:    #8899B4;
+      --slate:    #3A4A6B;
+      --radius:   12px;
+      --transition: .3s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── STRINGS DECORATION ── */
+    .strings {
+      width: 100%;
+      height: 40px;
+      position: relative;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .strings svg { width: 100%; height: 100%; }
+
+    /* ── NAV ── */
+    nav.topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(10,14,26,.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(212,160,23,.15);
+      padding: 0 1.25rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      text-decoration: none;
+    }
+    .nav-logo-img {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .nav-logo .logo-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: .1em;
+      color: var(--white);
+      line-height: 1;
+    }
+    .nav-logo .logo-sub {
+      font-size: .6rem;
+      color: var(--muted);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .nav-links { display: none; }
+
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 98;
+      backdrop-filter: blur(2px);
+    }
+    .sidebar-overlay.open { display: block; }
+
+    .sidebar {
+      position: fixed;
+      top: 0; right: -320px;
+      width: 300px;
+      height: 100%;
+      background: #0d1220;
+      border-left: 1px solid rgba(212,160,23,.2);
+      z-index: 99;
+      display: flex;
+      flex-direction: column;
+      transition: right .35s cubic-bezier(.4,0,.2,1);
+      overflow-y: auto;
+    }
+    .sidebar.open { right: 0; }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid rgba(58,74,107,.5);
+    }
+    .sidebar-close {
+      width: 34px; height: 34px;
+      background: rgba(58,74,107,.4);
+      border: 1px solid rgba(58,74,107,.6);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: var(--muted);
+      transition: var(--transition);
+    }
+    .sidebar-close:hover { background: rgba(212,160,23,.15); color: var(--gold); border-color: var(--gold); }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem;
+      gap: .4rem;
+      flex: 1;
+    }
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: .9rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .95rem;
+      font-weight: 500;
+      padding: .75rem 1rem;
+      border-radius: 8px;
+      transition: var(--transition);
+      border: 1px solid transparent;
+    }
+    .sidebar-nav a:hover {
+      color: var(--white);
+      background: rgba(58,74,107,.3);
+      border-color: rgba(58,74,107,.5);
+    }
+    .sidebar-nav a .nav-icon { font-size: 1.1rem; width: 22px; text-align: center; }
+
+    .sidebar-divider {
+      height: 1px;
+      background: rgba(58,74,107,.4);
+      margin: .6rem 0;
+    }
+
+    .sidebar-join {
+      margin: 0 1.5rem 1.5rem;
+    }
+    .sidebar-join a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      background: var(--gold);
+      color: var(--bg) !important;
+      padding: .85rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: .9rem;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .sidebar-join a:hover { background: var(--gold-lt); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 100px 1.5rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('bg banner.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(10,14,26,.72);
+    }
+
+    /* Animated guitar neck lines */
+    .guitar-neck {
+      position: absolute;
+      right: -2%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 55vw;
+      max-width: 500px;
+      opacity: .07;
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 28px; height: 2px;
+      background: var(--gold);
+      border-radius: 2px;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.2rem, 14vw, 8rem);
+      line-height: .92;
+      letter-spacing: .02em;
+      color: var(--white);
+      position: relative;
+      margin-bottom: .5rem;
+    }
+    .hero-title .accent { color: var(--gold); }
+    .hero-title .outline {
+      -webkit-text-stroke: 2px var(--gold);
+      color: transparent;
+    }
+
+    .hero-sub {
+      font-size: clamp(.95rem, 3vw, 1.15rem);
+      color: var(--muted);
+      max-width: 480px;
+      line-height: 1.65;
+      margin-bottom: 2.2rem;
+      position: relative;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .85rem 1.8rem;
+      border-radius: 8px;
+      font-size: .9rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: var(--transition);
+    }
+    .btn-primary {
+      background: var(--gold);
+      color: var(--bg);
+    }
+    .btn-primary:hover { background: var(--gold-lt); transform: translateY(-2px); }
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1.5px solid var(--slate);
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+
+    .hero-stats {
+      display: flex;
+      gap: 2rem;
+      margin-top: 3rem;
+      position: relative;
+    }
+    .stat { display: flex; flex-direction: column; }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: .72rem;
+      color: var(--muted);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    /* ── SECTION BASE ── */
+    section {
+      padding: 5rem 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: .8rem;
+    }
+    .section-eyebrow::before {
+      content: '';
+      width: 20px; height: 2px;
+      background: var(--gold);
+      border-radius: 2px;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.2rem, 7vw, 3.8rem);
+      letter-spacing: .04em;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── DIVIDER STRINGS ── */
+    .divider-full {
+      width: 100%;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    /* ── LEADER & VISI MISI ── */
+    .leader-wrap {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 3rem;
+      align-items: flex-start;
+      background: var(--bg3);
+      border: 1px solid rgba(58,74,107,.6);
+      border-radius: 16px;
+      padding: 2.5rem;
+    }
+
+    .leader-photo-side {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .leader-photo-frame {
+      width: 200px;
+      height: 220px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid rgba(212,160,23,.35);
+      background: var(--bg2);
+      position: relative;
+    }
+
+    .leader-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .leader-photo-fallback {
+      display: none;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg2);
+    }
+
+    .leader-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: .08em;
+      color: var(--white);
+    }
+    .leader-title {
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .leader-period {
+      font-size: .72rem;
+      color: var(--muted);
+      margin-top: .15rem;
+    }
+
+    .visi-misi-side { display: flex; flex-direction: column; }
+
+    .vm-block { margin-bottom: 1.2rem; }
+
+    .vm-label {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: .08em;
+      color: var(--gold);
+      margin-bottom: .6rem;
+    }
+    .vm-icon { font-size: 1.1rem; }
+
+    .vm-text {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: .92rem;
+      border-left: 2px solid var(--gold);
+      padding-left: 1rem;
+      text-align: justify;
+    }
+
+    .vm-divider {
+      width: 100%;
+      height: 1px;
+      background: rgba(58,74,107,.6);
+      margin: 1.2rem 0;
+    }
+
+    .vm-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: .65rem;
+      border-left: 2px solid var(--slate);
+      padding-left: 1rem;
+    }
+    .vm-list li {
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.6;
+      position: relative;
+      padding-left: 1rem;
+      text-align: justify;
+    }
+    .vm-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-size: .8rem;
+    }
+
+    @media (max-width: 768px) {
+      .leader-wrap {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+        gap: 2rem;
+      }
+      .leader-photo-frame {
+        width: 140px;
+        height: 155px;
+      }
+    }
+
+    /* ── AGENDA / EVENTS ── */
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .event-card {
+      background: var(--bg3);
+      border: 1px solid rgba(58,74,107,.6);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .event-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(212,160,23,.12);
+    }
+
+    .event-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: var(--bg2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .event-thumb svg { opacity: .18; }
+
+    .event-badge {
+      position: absolute;
+      top: .8rem; left: .8rem;
+      background: var(--red);
+      color: #fff;
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .25rem .6rem;
+      border-radius: 4px;
+    }
+    .event-badge.upcoming { background: var(--gold); color: var(--bg); }
+
+    .event-body { padding: 1.1rem; }
+    .event-date {
+      font-size: .72rem;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: .35rem;
+    }
+    .event-title {
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 1.4;
+      margin-bottom: .5rem;
+    }
+    .event-loc {
+      font-size: .8rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+    }
+
+    /* ── ABOUT ── */
+    .about-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: stretch;
+    }
+
+    .about-visual {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+    .about-visual .glow-ring {
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+      background: radial-gradient(circle, rgba(212,160,23,.15) 0%, transparent 70%);
+      border: 2px solid rgba(212,160,23,.25);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 40px rgba(212,160,23,.1);
+    }
+    .about-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .pillars {
+      display: flex;
+      flex-direction: column;
+      gap: .9rem;
+      margin-top: 1.5rem;
+    }
+    .pillar {
+      display: flex;
+      align-items: flex-start;
+      gap: .9rem;
+    }
+    .pillar-icon {
+      width: 38px; height: 38px;
+      background: rgba(212,160,23,.12);
+      border: 1px solid rgba(212,160,23,.25);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.1rem;
+    }
+    .pillar-text h4 { font-size: .9rem; font-weight: 600; margin-bottom: .15rem; }
+    .pillar-text p  { font-size: .8rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── GALLERY ── */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto auto;
+      gap: .8rem;
+    }
+    .gallery-item {
+      background: var(--bg3);
+      border-radius: 8px;
+      aspect-ratio: 1;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(58,74,107,.4);
+      transition: var(--transition);
+      position: relative;
+    }
+    .gallery-item:first-child {
+      grid-column: span 2;
+      grid-row: span 2;
+      aspect-ratio: unset;
+    }
+    .gallery-item:hover { border-color: var(--gold); }
+    .gallery-item svg { opacity: .15; }
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10,14,26,.8) 0%, transparent 60%);
+      display: flex;
+      align-items: flex-end;
+      padding: 1rem;
+      opacity: 0;
+      transition: var(--transition);
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-overlay span {
+      font-size: .75rem;
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    /* ── ANGGOTA ── */
+    .members-scroll {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding-bottom: 1rem;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: var(--slate) transparent;
+    }
+    .member-card {
+      flex-shrink: 0;
+      width: 160px;
+      background: var(--bg3);
+      border: 1px solid rgba(58,74,107,.5);
+      border-radius: var(--radius);
+      padding: 1.2rem 1rem;
+      text-align: center;
+      transition: var(--transition);
+    }
+    .member-card:hover { border-color: var(--gold); }
+    .member-avatar {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: var(--slate);
+      margin: 0 auto .8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: var(--gold);
+      border: 2px solid rgba(212,160,23,.3);
+    }
+    .member-name { font-weight: 600; font-size: .88rem; margin-bottom: .2rem; }
+    .member-role { font-size: .72rem; color: var(--muted); }
+
+    .btn-all-members {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      color: var(--gold);
+      text-decoration: none;
+      font-size: .88rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      border: 1.5px solid rgba(212,160,23,.35);
+      padding: .65rem 1.5rem;
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+    .btn-all-members:hover {
+      background: rgba(212,160,23,.1);
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    /* ── JOIN CTA ── */
+    .cta-band {
+      background: linear-gradient(135deg, var(--bg3) 0%, rgba(212,160,23,.08) 100%);
+      border-top: 1px solid rgba(212,160,23,.15);
+      border-bottom: 1px solid rgba(212,160,23,.15);
+      padding: 5rem 1.5rem;
+      text-align: center;
+    }
+    .cta-band .section-title { margin-bottom: .6rem; }
+    .cta-band .section-desc { margin: 0 auto 2rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--slate);
+      padding: 2.5rem 1.5rem;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      text-align: center;
+    }
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .82rem;
+      transition: color var(--transition);
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-copy { font-size: .75rem; color: var(--slate); }
+    .footer-inner .nav-logo { justify-content: center; }
+
+    .social-row {
+      display: flex;
+      gap: .8rem;
+    }
+    .social-btn {
+      width: 38px; height: 38px;
+      border-radius: 8px;
+      background: var(--bg3);
+      border: 1px solid var(--slate);
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--transition);
+      text-decoration: none;
+      color: var(--muted);
+    }
+    .social-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(212,160,23,.08); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .about-wrap { grid-template-columns: 1fr; }
+      .about-visual { display: flex; order: 2; min-height: 260px; }
+
+      .gallery-grid {
+        grid-template-columns: repeat(2,1fr);
+        grid-template-rows: auto;
+      }
+      .gallery-item:first-child {
+        grid-column: span 2;
+        aspect-ratio: 16/9;
+      }
+
+      .hero-stats { gap: 1.5rem; }
+
+      section { padding: 3.5rem 1.25rem; }
+    }
+
+    @media (max-width: 480px) {
+      .hero { padding-top: 90px; }
+      .btn { padding: .75rem 1.4rem; font-size: .85rem; }
+      .events-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(24px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+    .anim { opacity: 0; animation: fadeUp .7s ease forwards; }
+    .anim-d1 { animation-delay: .1s; }
+    .anim-d2 { animation-delay: .25s; }
+    .anim-d3 { animation-delay: .4s; }
+    .anim-d4 { animation-delay: .55s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .anim { opacity: 1; animation: none; }
+    }
+
+    /* string pulse */
+    @keyframes stringPulse {
+      0%,100% { opacity: .5; }
+      50%       { opacity: 1; }
+    }
+    .s1 { animation: stringPulse 3.2s ease-in-out infinite; }
+    .s2 { animation: stringPulse 3.8s ease-in-out .4s infinite; }
+    .s3 { animation: stringPulse 4.1s ease-in-out .8s infinite; }
+    .s4 { animation: stringPulse 3.5s ease-in-out 1.2s infinite; }
+    .s5 { animation: stringPulse 4.4s ease-in-out 1.6s infinite; }
+    .s6 { animation: stringPulse 3.9s ease-in-out 2s infinite; }
+    .sidebar-login-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      background: var(--gold);
+      color: var(--bg);
+      padding: .85rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: .9rem;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+    }
+    .sidebar-login-btn:hover { background: var(--gold-lt); }
+
+    /* ── LOGIN MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.7);
+      backdrop-filter: blur(6px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: #0d1220;
+      border: 1px solid rgba(212,160,23,.25);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 420px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,.5);
+      animation: fadeUp .3s ease forwards;
+    }
+
+    .modal-header {
+      padding: 1.5rem 1.5rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: .08em;
+      color: var(--white);
+    }
+    .modal-close {
+      width: 32px; height: 32px;
+      background: rgba(58,74,107,.4);
+      border: 1px solid rgba(58,74,107,.6);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: var(--muted);
+      transition: var(--transition);
+    }
+    .modal-close:hover { background: rgba(212,160,23,.15); color: var(--gold); border-color: var(--gold); }
+
+    /* Role tabs */
+    .role-tabs {
+      display: flex;
+      gap: .5rem;
+      padding: 1.2rem 1.5rem .5rem;
+    }
+    .role-tab {
+      flex: 1;
+      padding: .65rem;
+      border-radius: 8px;
+      border: 1.5px solid rgba(58,74,107,.6);
+      background: transparent;
+      color: var(--muted);
+      font-size: .85rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .4rem;
+    }
+    .role-tab:hover { border-color: var(--gold); color: var(--gold); }
+    .role-tab.active {
+      background: rgba(212,160,23,.12);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .modal-body { padding: 1rem 1.5rem 1.5rem; }
+
+    .login-form { display: none; flex-direction: column; gap: 1rem; }
+    .login-form.active { display: flex; }
+
+    .form-group { display: flex; flex-direction: column; gap: .4rem; }
+    .form-label {
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+    .form-input, .form-select {
+      background: rgba(28,37,57,.8);
+      border: 1.5px solid rgba(58,74,107,.6);
+      border-radius: 8px;
+      padding: .75rem 1rem;
+      color: var(--white);
+      font-size: .9rem;
+      font-family: 'Inter', sans-serif;
+      transition: var(--transition);
+      width: 100%;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    .form-input:focus, .form-select:focus { border-color: var(--gold); background: rgba(28,37,57,1); }
+    .form-input::placeholder { color: var(--slate); }
+    .form-select option { background: #0d1220; color: var(--white); }
+
+    .form-submit {
+      width: 100%;
+      padding: .85rem;
+      background: var(--gold);
+      color: var(--bg);
+      border: none;
+      border-radius: 8px;
+      font-size: .95rem;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: .3rem;
+    }
+    .form-submit:hover { background: var(--gold-lt); }
+
+    .form-hint {
+      font-size: .75rem;
+      color: var(--slate);
+      text-align: center;
+      margin-top: .2rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="topbar">
+  <a href="#" class="nav-logo">
+    <img src="logo.jpeg" alt="BBGC Logo" class="nav-logo-img"/>
+    <div>
+      <div class="logo-text">BBGC</div>
+      <div class="logo-sub">Bangka Belitung Guitar Community</div>
+    </div>
+  </a>
+
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <a href="#" class="nav-logo" onclick="closeSidebar()">
+      <img src="logo.jpeg" alt="BBGC Logo" class="nav-logo-img"/>
+      <div>
+        <div class="logo-text">BBGC</div>
+        <div class="logo-sub">Bangka Belitung Guitar Community</div>
+      </div>
+    </a>
+    <button class="sidebar-close" onclick="closeSidebar()" aria-label="Tutup">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <div class="sidebar-nav">
+    <a href="#events" onclick="closeSidebar()">
+      <span class="nav-icon">🎸</span> Agenda
+    </a>
+    <a href="#about" onclick="closeSidebar()">
+      <span class="nav-icon">📖</span> Tentang Kami
+    </a>
+    <a href="#visi-misi" onclick="closeSidebar()">
+      <span class="nav-icon">🎯</span> Visi &amp; Misi
+    </a>
+    <a href="#gallery" onclick="closeSidebar()">
+      <span class="nav-icon">📸</span> Galeri
+    </a>
+    <a href="#members" onclick="closeSidebar()">
+      <span class="nav-icon">🎵</span> Anggota
+    </a>
+    <div class="sidebar-divider"></div>
+  </div>
+
+  <div class="sidebar-join">
+    <button onclick="openLoginModal(); closeSidebar();" class="sidebar-login-btn">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      Login
+    </button>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal" onclick="handleModalOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Login BBGC</span>
+      <button class="modal-close" onclick="closeLoginModal()" aria-label="Tutup">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Role Tabs -->
+    <div class="role-tabs">
+      <button class="role-tab active" id="tabMember" onclick="switchRole('member')">
+        🎸 Member
+      </button>
+      <button class="role-tab" id="tabAdmin" onclick="switchRole('admin')">
+        🛡️ Administrator
+      </button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- Form Member -->
+      <form class="login-form active" id="formMember" onsubmit="handleLogin(event,'member')">
+        <div class="form-group">
+          <label class="form-label">Pilih Nama Member</label>
+          <select class="form-select" id="memberName" required>
+            <option value="" disabled selected>-- Pilih nama kamu --</option>
+            <option>Ahmad Reza</option>
+            <option>Dwi Wahyu</option>
+            <option>Fauzan Akbar</option>
+            <option>Siti Putri</option>
+            <option>Ridho Hakim</option>
+            <option>M. Iqbal</option>
+            <option>Nur Aini</option>
+            <option>Bagas Satrio</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-input" id="memberPassword" placeholder="Masukkan password" required/>
+        </div>
+        <button type="submit" class="form-submit">Masuk sebagai Member</button>
+        <p class="form-hint">Belum terdaftar? Hubungi pengurus BBGC.</p>
+      </form>
+
+      <!-- Form Admin -->
+      <form class="login-form" id="formAdmin" onsubmit="handleLogin(event,'admin')">
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" class="form-input" id="adminUsername" placeholder="Masukkan username" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-input" id="adminPassword" placeholder="Masukkan password" required/>
+        </div>
+        <button type="submit" class="form-submit">Masuk sebagai Administrator</button>
+        <p class="form-hint">Akses khusus pengurus BBGC.</p>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+
+  <!-- Animated guitar neck SVG -->
+  <svg class="guitar-neck" viewBox="0 0 400 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="160" y="0" width="80" height="600" rx="12" fill="var(--gold)"/>
+    <line class="s1" x1="175" y1="0" x2="175" y2="600" stroke="#ffffff" stroke-width="1.5"/>
+    <line class="s2" x1="190" y1="0" x2="190" y2="600" stroke="#ffffff" stroke-width="1.5"/>
+    <line class="s3" x1="200" y1="0" x2="200" y2="600" stroke="#ffffff" stroke-width="2"/>
+    <line class="s4" x1="210" y1="0" x2="210" y2="600" stroke="#ffffff" stroke-width="1.5"/>
+    <line class="s5" x1="222" y1="0" x2="222" y2="600" stroke="#ffffff" stroke-width="1.5"/>
+    <line class="s6" x1="234" y1="0" x2="234" y2="600" stroke="#ffffff" stroke-width="1"/>
+    <!-- frets -->
+    <rect x="160" y="80"  width="80" height="4" rx="2" fill="rgba(255,255,255,.3)"/>
+    <rect x="160" y="160" width="80" height="4" rx="2" fill="rgba(255,255,255,.3)"/>
+    <rect x="160" y="240" width="80" height="4" rx="2" fill="rgba(255,255,255,.3)"/>
+    <rect x="160" y="320" width="80" height="4" rx="2" fill="rgba(255,255,255,.3)"/>
+    <rect x="160" y="400" width="80" height="4" rx="2" fill="rgba(255,255,255,.3)"/>
+    <rect x="160" y="480" width="80" height="4" rx="2" fill="rgba(255,255,255,.3)"/>
+  </svg>
+
+  <span class="hero-eyebrow anim anim-d1">Komunitas Musik Bangka Belitung</span>
+  <h1 class="hero-title anim anim-d2">
+    SATU<br>
+    <span class="accent">RIFF</span><br>
+    <span class="outline">SATU JIWA</span>
+  </h1>
+  <p class="hero-sub anim anim-d3">
+    Tempat berkumpulnya para pecinta gitar dari Bangka Belitung — berbagi inspirasi, mengasah teknik, dan merayakan musik bersama.
+  </p>
+  <div class="hero-actions anim anim-d4">
+    <a href="#join" class="btn btn-primary">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+      Bergabung Gratis
+    </a>
+    <a href="#events" class="btn btn-outline">Lihat Agenda</a>
+  </div>
+
+  <div class="hero-stats anim anim-d4">
+    <div class="stat">
+      <span class="stat-num">120+</span>
+      <span class="stat-label">Anggota</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">45+</span>
+      <span class="stat-label">Event</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">7</span>
+      <span class="stat-label">Tahun Berdiri</span>
+    </div>
+  </div>
+</div>
+
+<!-- STRINGS DIVIDER -->
+<div class="divider-full">
+  <svg viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="display:block;height:40px;">
+    <line class="s1" x1="0" y1="8"  x2="1200" y2="8"  stroke="var(--gold)"   stroke-width=".8" stroke-dasharray="4 8"/>
+    <line class="s2" x1="0" y1="14" x2="1200" y2="14" stroke="var(--slate)"  stroke-width=".7" stroke-dasharray="6 10"/>
+    <line class="s3" x1="0" y1="20" x2="1200" y2="20" stroke="var(--gold)"   stroke-width="1"  stroke-dasharray="3 6"/>
+    <line class="s4" x1="0" y1="26" x2="1200" y2="26" stroke="var(--slate)"  stroke-width=".7" stroke-dasharray="5 9"/>
+    <line class="s5" x1="0" y1="30" x2="1200" y2="30" stroke="var(--gold)"   stroke-width=".6" stroke-dasharray="4 8"/>
+    <line class="s6" x1="0" y1="35" x2="1200" y2="35" stroke="var(--slate)"  stroke-width=".5" stroke-dasharray="6 12"/>
+  </svg>
+</div>
+
+<!-- LEADER & VISI MISI -->
+<section id="visi-misi">
+  <div class="leader-wrap">
+
+    <!-- Foto Ketua -->
+    <div class="leader-photo-side">
+      <div class="leader-photo-frame">
+        <img src="ketua.jpeg" alt="Foto Ketua BBGC" class="leader-photo"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="leader-photo-fallback">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+      </div>
+      <div class="leader-info">
+        <div class="leader-name">Nama Ketua</div>
+        <div class="leader-title">Ketua BBGC</div>
+        <div class="leader-period">Periode 2024 – 2026</div>
+      </div>
+    </div>
+
+    <!-- Visi & Misi -->
+    <div class="visi-misi-side">
+      <span class="section-eyebrow">Arah Komunitas</span>
+      <h2 class="section-title" style="margin-bottom:1.5rem;">Visi &amp; Misi</h2>
+
+      <div class="vm-block">
+        <div class="vm-label">
+          <span class="vm-icon">🎯</span>
+          <span>Visi</span>
+        </div>
+        <p class="vm-text">
+          Menjadi komunitas gitar terdepan di Bangka Belitung yang melahirkan musisi berkualitas, mempererat persaudaraan, dan menjadi wadah ekspresi seni yang positif bagi seluruh masyarakat Babel.
+        </p>
+      </div>
+
+      <div class="vm-divider"></div>
+
+      <div class="vm-block">
+        <div class="vm-label">
+          <span class="vm-icon">🚀</span>
+          <span>Misi</span>
+        </div>
+        <ul class="vm-list">
+          <li>Mengadakan kegiatan rutin yang mendukung perkembangan kemampuan bermusik anggota.</li>
+          <li>Membangun jaringan musisi lintas genre dan generasi di seluruh Bangka Belitung.</li>
+          <li>Mempromosikan budaya musik lokal melalui event, workshop, dan kolaborasi.</li>
+          <li>Menjadi komunitas yang inklusif, terbuka, dan ramah bagi semua kalangan.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section id="events">
+  <span class="section-eyebrow">Agenda Terbaru</span>
+  <h2 class="section-title">Event &amp; Kegiatan</h2>
+  <p class="section-desc">Jangan sampai ketinggalan! Dari jam session santai sampai kompetisi gitar bergengsi se-Bangka Belitung.</p>
+
+  <div class="events-grid">
+
+    <div class="event-card">
+      <div class="event-thumb">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="var(--gold)" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z"/>
+        </svg>
+        <span class="event-badge upcoming">Upcoming</span>
+      </div>
+      <div class="event-body">
+        <div class="event-date">Sabtu, 21 Juni 2026</div>
+        <div class="event-title">BBGC Jam Session Vol.12</div>
+        <div class="event-loc">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+          Cafe Akustik, Pangkalpinang
+        </div>
+      </div>
+    </div>
+
+    <div class="event-card">
+      <div class="event-thumb">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="var(--gold)" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/>
+        </svg>
+        <span class="event-badge upcoming">Upcoming</span>
+      </div>
+      <div class="event-body">
+        <div class="event-date">Minggu, 6 Juli 2026</div>
+        <div class="event-title">Workshop: Teknik Fingerstyle Bersama Maestro Lokal</div>
+        <div class="event-loc">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+          Gedung Kesenian Babel, Bangka
+        </div>
+      </div>
+    </div>
+
+    <div class="event-card">
+      <div class="event-thumb">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="var(--gold)">
+          <path d="M5 3l3.057-3L12 3.5 15.943 0 19 3h2v2l-1 14-8 4-8-4L3 5V3h2zm2 2-.941 13.238L12 20.5l7.941-2.262L19 5H5z"/>
+        </svg>
+        <span class="event-badge">Selesai</span>
+      </div>
+      <div class="event-body">
+        <div class="event-date">Sabtu, 10 Mei 2026</div>
+        <div class="event-title">Kompetisi Gitar Babel Open 2026</div>
+        <div class="event-loc">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+          Lapangan Merdeka, Belitung
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- STRINGS DIVIDER -->
+<div class="divider-full">
+  <svg viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="display:block;height:40px;">
+    <line class="s3" x1="0" y1="8"  x2="1200" y2="8"  stroke="var(--slate)"  stroke-width=".8" stroke-dasharray="4 8"/>
+    <line class="s1" x1="0" y1="15" x2="1200" y2="15" stroke="var(--gold)"   stroke-width=".7" stroke-dasharray="6 10"/>
+    <line class="s4" x1="0" y1="22" x2="1200" y2="22" stroke="var(--slate)"  stroke-width="1"  stroke-dasharray="3 6"/>
+    <line class="s2" x1="0" y1="28" x2="1200" y2="28" stroke="var(--gold)"   stroke-width=".6" stroke-dasharray="5 9"/>
+    <line class="s6" x1="0" y1="33" x2="1200" y2="33" stroke="var(--slate)"  stroke-width=".5" stroke-dasharray="4 8"/>
+  </svg>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-wrap">
+    <div>
+      <span class="section-eyebrow">Tentang BBGC</span>
+      <h2 class="section-title">Lebih dari Sekadar Komunitas</h2>
+      <p class="section-desc">
+        BBGC lahir dari rasa cinta yang sama terhadap gitar dan musik. Berdiri sejak 2018, kami telah mempertemukan ratusan gitaris dari seluruh Bangka Belitung — dari pemula hingga profesional.
+      </p>
+      <div class="pillars">
+        <div class="pillar">
+          <div class="pillar-icon">🎸</div>
+          <div class="pillar-text">
+            <h4>Belajar Bersama</h4>
+            <p>Workshop, klinik, dan sesi latihan rutin untuk semua level — dari chord pertama hingga teknik advanced.</p>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">🎤</div>
+          <div class="pillar-text">
+            <h4>Tampil di Panggung</h4>
+            <p>Kami rutin mengadakan jam session dan konser untuk memberikan pengalaman panggung nyata bagi anggota.</p>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">🤝</div>
+          <div class="pillar-text">
+            <h4>Jaringan Musisi</h4>
+            <p>Terhubung dengan gitaris, bassist, drummer, dan musisi lainnya se-Bangka Belitung.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="about-visual">
+      <div class="glow-ring">
+        <img src="gambar1.jpg" alt="BBGC Community" class="about-img"/>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <span class="section-eyebrow">Galeri</span>
+  <h2 class="section-title">Momen &amp; Kenangan</h2>
+  <p class="section-desc">Setiap petikan, setiap penampilan — semuanya tersimpan di sini.</p>
+  <div class="gallery-grid">
+    <div class="gallery-item" style="min-height:220px;">
+      <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      <div class="gallery-overlay"><span>📸 Jam Session Vol.11 – Maret 2026</span></div>
+    </div>
+    <div class="gallery-item">
+      <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5">
+        <path d="M9 19V6l12-3v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="15" r="3"/>
+      </svg>
+      <div class="gallery-overlay"><span>🎸 Workshop</span></div>
+    </div>
+    <div class="gallery-item">
+      <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5">
+        <circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>
+      </svg>
+      <div class="gallery-overlay"><span>🎤 Konser</span></div>
+    </div>
+    <div class="gallery-item">
+      <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5">
+        <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+      </svg>
+      <div class="gallery-overlay"><span>📷 Kompetisi</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- MEMBERS -->
+<section id="members">
+  <span class="section-eyebrow">Anggota</span>
+  <h2 class="section-title">Gitaris BBGC</h2>
+  <p class="section-desc">Kenali para musisi berbakat dari Bangka Belitung yang menjadi bagian dari keluarga besar BBGC.</p>
+  <div class="members-scroll">
+    <div class="member-card">
+      <div class="member-avatar">AR</div>
+      <div class="member-name">Ahmad Reza</div>
+      <div class="member-role">Fingerstyle</div>
+    </div>
+    <div class="member-card">
+      <div class="member-avatar">DW</div>
+      <div class="member-name">Dwi Wahyu</div>
+      <div class="member-role">Blues / Rock</div>
+    </div>
+    <div class="member-card">
+      <div class="member-avatar">FA</div>
+      <div class="member-name">Fauzan Akbar</div>
+      <div class="member-role">Classical</div>
+    </div>
+    <div class="member-card">
+      <div class="member-avatar">SP</div>
+      <div class="member-name">Siti Putri</div>
+      <div class="member-role">Pop Akustik</div>
+    </div>
+    <div class="member-card">
+      <div class="member-avatar">RH</div>
+      <div class="member-name">Ridho Hakim</div>
+      <div class="member-role">Jazz Fusion</div>
+    </div>
+    <div class="member-card">
+      <div class="member-avatar">MI</div>
+      <div class="member-name">M. Iqbal</div>
+      <div class="member-role">Metal / Shred</div>
+    </div>
+    <div class="member-card">
+      <div class="member-avatar">NA</div>
+      <div class="member-name">Nur Aini</div>
+      <div class="member-role">Folk Indie</div>
+    </div>
+    <div class="member-card">
+      <div class="member-avatar">BS</div>
+      <div class="member-name">Bagas Satrio</div>
+      <div class="member-role">R&amp;B / Funk</div>
+    </div>
+  </div>
+  <div style="text-align:center; margin-top:1.8rem;">
+    <a href="#" class="btn-all-members">
+      Lihat Semua Member
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+<div class="cta-band" id="join">
+  <div style="max-width:600px;margin:0 auto;">
+    <span class="section-eyebrow" style="justify-content:center;">Bergabung</span>
+    <h2 class="section-title">Siap Petik Bersama Kami?</h2>
+    <p class="section-desc" style="margin-left:auto;margin-right:auto;">
+      Komunitas ini terbuka untuk semua — pemula yang baru belajar chord pertama, hingga gitaris berpengalaman. Tidak ada persyaratan selain rasa cinta pada gitar.
+    </p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="https://wa.me/628XXXXXXXXX" target="_blank" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.552 4.112 1.515 5.842L0 24l6.336-1.495A11.932 11.932 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.791 9.791 0 0 1-5.044-1.394l-.361-.214-3.762.887.925-3.661-.235-.374A9.79 9.79 0 0 1 2.182 12C2.182 6.579 6.579 2.182 12 2.182S21.818 6.579 21.818 12 17.421 21.818 12 21.818z"/></svg>
+        Hubungi via WhatsApp
+      </a>
+      <a href="https://instagram.com/bbgcofficial" target="_blank" class="btn btn-outline">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        Follow Instagram
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <a href="#" class="nav-logo" style="flex-direction:column; align-items:center; text-align:center;">
+      <img src="logo.jpeg" alt="BBGC Logo" class="nav-logo-img" style="width:56px; height:56px;"/>
+      <div>
+        <div class="logo-text">BBGC</div>
+        <div class="logo-sub">Bangka Belitung Guitar Community</div>
+      </div>
+    </a>
+    <div class="social-row">
+      <a href="#" class="social-btn" title="Instagram">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+      </a>
+      <a href="#" class="social-btn" title="YouTube">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+      </a>
+      <a href="#" class="social-btn" title="WhatsApp">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.122.552 4.112 1.515 5.842L0 24l6.336-1.495A11.932 11.932 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.791 9.791 0 0 1-5.044-1.394l-.361-.214-3.762.887.925-3.661-.235-.374A9.79 9.79 0 0 1 2.182 12C2.182 6.579 6.579 2.182 12 2.182S21.818 6.579 21.818 12 17.421 21.818 12 21.818z"/></svg>
+      </a>
+      <a href="#" class="social-btn" title="Facebook">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+    </div>
+    <div class="footer-links">
+      <a href="#events">Agenda</a>
+      <a href="#about">Tentang</a>
+      <a href="#gallery">Galeri</a>
+      <a href="#members">Anggota</a>
+      <a href="#join">Bergabung</a>
+    </div>
+    <p class="footer-copy">© 2026 BBGC – Bangka Belitung Guitar Community. Dibuat dengan ❤️ untuk para musisi Babel.</p>
+  </div>
+</footer>
+
+<script>
+  // Hamburger toggle
+  const hamburger = document.getElementById('hamburger');
+  const sidebar    = document.getElementById('sidebar');
+  const overlay    = document.getElementById('sidebarOverlay');
+
+  function openSidebar() {
+    sidebar.classList.add('open');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    const spans = hamburger.querySelectorAll('span');
+    spans[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+    spans[1].style.opacity   = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+  }
+
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    hamburger.querySelectorAll('span').forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+
+  hamburger.addEventListener('click', () => {
+    sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+  });
+
+  // Close sidebar on Escape key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeSidebar();
+      closeLoginModal();
+    }
+  });
+
+  // ── LOGIN MODAL ──
+  function openLoginModal() {
+    document.getElementById('loginModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLoginModal() {
+    document.getElementById('loginModal').classList.remove('open');
+    document.body.style.overflow = '';
+    document.getElementById('formMember').reset();
+    document.getElementById('formAdmin').reset();
+  }
+
+  function handleModalOverlayClick(e) {
+    if (e.target === document.getElementById('loginModal')) closeLoginModal();
+  }
+
+  function switchRole(role) {
+    const isMember = role === 'member';
+    document.getElementById('tabMember').classList.toggle('active', isMember);
+    document.getElementById('tabAdmin').classList.toggle('active', !isMember);
+    document.getElementById('formMember').classList.toggle('active', isMember);
+    document.getElementById('formAdmin').classList.toggle('active', !isMember);
+  }
+
+  function handleLogin(e, role) {
+    e.preventDefault();
+    if (role === 'member') {
+      const name = document.getElementById('memberName').value;
+      alert('Selamat datang, ' + name + '! 🎸');
+    } else {
+      const user = document.getElementById('adminUsername').value;
+      alert('Selamat datang, Administrator ' + user + '! 🛡️');
+    }
+    closeLoginModal();
+  }
+
+  // Intersection observer for scroll animations
+  const animEls = document.querySelectorAll('.event-card, .pillar, .member-card, .gallery-item');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.animation = 'fadeUp .6s ease forwards';
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  animEls.forEach(el => {
+    el.style.opacity = '0';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
